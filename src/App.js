@@ -55,9 +55,13 @@ export default class App extends React.Component {
       const races = data.race_summaries;
 
       for (const [key] of Object.entries(races)) {
-        const race = races[key];
+        const race = races[key];        
         newRaces = newRaces.concat({
           // TODO: You will have to work with the API payload to determine what data you require
+          advertisedStart: race.advertised_start.seconds * 1000, 
+          meetingName: race.meeting_name,
+          raceNumber: race.race_number,
+          categoryId: race.category_id,
         });
       }
 
@@ -73,8 +77,8 @@ export default class App extends React.Component {
         unsortedRaces: newRaces,
         sortedRaces: newRaces.filter((value) => {
           if (sortedRaceCount < 5 && (value.advertisedStart - this.state.time) > -60000) {
-            sortedRaceCount++;
-            return true;
+            sortedRaceCount++;  
+            return true;   
           }
           return false;
         })
@@ -94,6 +98,7 @@ export default class App extends React.Component {
     const timeSecs = Math.abs(timeMs) % 60;
 
     // TODO: Implement your logic to format the display of the race jump time
+    return `${timeMins}min ${timeSecs}s` 
   }
 
   // Render components
@@ -103,26 +108,26 @@ export default class App extends React.Component {
         <div className="buttonContainer">
           <button className="buttonToggle" onClick={() => {
             // TODO: Populate the state sets with appropriate actions to give each button functionality
-            this.setState();
+            this.setState({selectedCategory: null});
           }}>All Races</button>
         </div>
         <div className="categories">
           <div className="buttonContainer">
             <button className="buttonToggle" onClick={() => {
               // TODO: Populate the state sets with appropriate actions to give each button functionality
-              this.setState();
+              this.setState({selectedCategory: '9daef0d7-bf3c-4f50-921d-8e818c60fe61'});
             }}>Greyhounds</button>
           </div>
           <div className="buttonContainer">
             <button className="buttonToggle" onClick={() => {
               // TODO: Populate the state sets with appropriate actions to give each button functionality
-              this.setState();
+              this.setState({selectedCategory: '161d9be2-e909-4326-8c2c-35ed71fb460b'});
             }}>Harness</button>
           </div>
           <div className="buttonContainer">
             <button className="buttonToggle" onClick={() => {
               // TODO: Populate the state sets with appropriate actions to give each button functionality
-              this.setState();
+              this.setState({selectedCategory: '4a2788f8-e825-4d36-9894-efd4baf1cfae'});
             }}>Thoroughbreds</button>
           </div>
         </div>
@@ -130,7 +135,7 @@ export default class App extends React.Component {
           {this.state.sortedRaces.map(item => (
             <ul>
               {/* TODO: Edit the string below to display the Race number, Meeting name and time to jump */}
-              <span className="item">Race X - Meeting - Jumps in X</span>
+              <span className="item">{`${item.raceNumber} - ${item.meetingName} - ${this.getFormattedTime(item.advertisedStart)}`}</span>
             </ul>
           ))}
         </div>
